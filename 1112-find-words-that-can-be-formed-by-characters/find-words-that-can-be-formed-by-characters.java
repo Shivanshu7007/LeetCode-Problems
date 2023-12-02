@@ -1,32 +1,27 @@
 class Solution {
     public int countCharacters(String[] words, String chars) {
-        int[] counts = new int[26];
-        // Step 1: Initialize Character Counts Array
-        for(int i=0;i<chars.length();i++)
-        {
-            counts[chars.charAt(i)-'a']++;
+        int[] charFrequency = new int[26];
+        for (char ch : chars.toCharArray()) {
+            charFrequency[ch - 'a']++;
         }
-        int res =0 ;
-        // Step 3: Check Words
-        for(String s : words)
-        {
-            if(canForm(s,counts))
-                // Step 4: Calculate Lengths
-                res+=s.length();
+
+        int totalLength = 0;
+        for (String word : words) {
+            if (canFormWord(word, charFrequency.clone())) {
+                totalLength += word.length();
+            }
         }
-        return res;
+
+        return totalLength;
     }
 
-    boolean canForm(String word, int[] counts)
-    {
-        int[] c = new int[26];
-        // Step 2: Update Counts Array
-        for(int i =0;i<word.length();i++)
-        {
-            int x = word.charAt(i)-'a';
-            c[x]++;
-            if(c[x] > counts[x])
+    private boolean canFormWord(String word, int[] charFrequency) {
+        for (char ch : word.toCharArray()) {
+            int index = ch - 'a';
+            if (charFrequency[index] == 0) {
                 return false;
+            }
+            charFrequency[index]--;
         }
         return true;
     }
