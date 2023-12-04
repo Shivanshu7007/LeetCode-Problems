@@ -1,23 +1,26 @@
-public class Solution {
+class Solution {
     public boolean isMatch(String s, String p) {
-        boolean[][] match=new boolean[s.length()+1][p.length()+1];
-        match[s.length()][p.length()]=true;
-        for(int i=p.length()-1;i>=0;i--){
-            if(p.charAt(i)!='*')
-                break;
-            else
-                match[s.length()][i]=true;
+        int sp = 0;
+        int pp = 0;
+        int match = 0;
+        int star = -1;
+        while (sp < s.length()){
+            if(pp < p.length() && (s.charAt(sp) == p.charAt(pp) || p.charAt(pp) == '?')){
+                sp++;
+                pp++;
+            }else if(pp < p.length() && p.charAt(pp) == '*'){
+                star = pp;
+                match = sp;
+                pp++;
+            }else if(star != -1){
+                pp = star + 1;
+                match++;
+                sp = match;
+            }else return false;
         }
-        for(int i=s.length()-1;i>=0;i--){
-            for(int j=p.length()-1;j>=0;j--){
-                if(s.charAt(i)==p.charAt(j)||p.charAt(j)=='?')
-                        match[i][j]=match[i+1][j+1];
-                else if(p.charAt(j)=='*')
-                        match[i][j]=match[i+1][j]||match[i][j+1];
-                else
-                    match[i][j]=false;
-            }
+        while(pp < p.length() && p.charAt(pp) == '*'){
+            pp++;
         }
-        return match[0][0];
+        return pp == p.length();
     }
 }
