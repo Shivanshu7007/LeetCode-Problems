@@ -1,12 +1,14 @@
 class Solution {
 public:
     double myPow(double x, int n) {
-        double res=1.0;
-        for(int i=n;i;i/=2){
-            if(i&1)res*=x;
-            x*=x;
-            
+        if(n==0)return 1;
+        if(n<0){
+            n = abs(n);
+            x = 1/x;
         }
-        return n>=0?res:1/res; 
+        if(n%2==0){
+            return myPow(x*x, n/2);
+        }
+        else return x* myPow(x ,n-1);  
     }
 };
