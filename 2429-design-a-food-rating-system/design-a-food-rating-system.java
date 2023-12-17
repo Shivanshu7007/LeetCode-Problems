@@ -1,45 +1,51 @@
 class FoodRatings {
-    class Node{
+    class P {
         String food;
         String cuisine;
         int rating;
-        
-        Node(String food, int rating, String cuisine){
+
+        P(String food, String cuisine, int rating) {
             this.food = food;
-            this.rating = rating;
             this.cuisine = cuisine;
+            this.rating = rating;
         }
     }
 
-    Map<String, TreeSet<Node>> map = new HashMap<>();
-    Map<String, Node> nodes = new HashMap<>();
-    
+    Map<String, PriorityQueue<P>> cuisineToFood = new HashMap<>();
+    Map<String, P> foodMap = new HashMap<>();
+
     public FoodRatings(String[] foods, String[] cuisines, int[] ratings) {
-        Comparator<Node> comparator = (a,b) -> {
-            return a.rating == b.rating ? a.food.compareTo(b.food) : b.rating - a.rating;
-        };
-        
-        for(int i=0;i<foods.length;i++){
-            String food = foods[i];
-            String cuisine = cuisines[i];
+        for(int i=0; i<foods.length; i++) {
+            String food = foods[i], cuisine = cuisines[i];
             int rating = ratings[i];
-            
-            Node node = new Node(food, rating, cuisine);
-            nodes.put(food, node);
-                                                      
-            map.computeIfAbsent(cuisine, a -> new TreeSet<Node>(comparator)).add(node);
+
+        if(!cuisineToFood.containsKey(cuisine)) cuisineToFood.put(cuisine, new PriorityQueue<>((p1,p2)->{
+            if(p1.rating == p2.rating) return p1.food.compareTo(p2.food);
+            return p2.rating-p1.rating;  
+        }));
+
+            P p = new P(food, cuisine, rating);
+
+            cuisineToFood.get(cuisine).add(p);
+            foodMap.put(food, p);
         }
     }
     
     public void changeRating(String food, int newRating) {
-        Node node = nodes.get(food);
-        TreeSet<Node> set = map.get(node.cuisine);
-        set.remove(node);
-        node.rating = newRating;
-        set.add(node);
+        P p = foodMap.get(food);
+        P p2 = new P(food, p.cuisine, newRating);
+        p.food = "";
+        foodMap.put(food, p2);
+        cuisineToFood.get(p2.cuisine).add(p2);
     }
     
     public String highestRated(String cuisine) {
-        return map.get(cuisine).first().food;
+        String food = cuisineToFood.get(cuisine).peek().food;
+        while(food.equals("")) {
+            cuisineToFood.get(cuisine).poll();
+            food = cuisineToFood.get(cuisine).peek().food;
+        }
+        return food;
     }
 }
+
