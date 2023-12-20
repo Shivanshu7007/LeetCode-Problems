@@ -1,6 +1,5 @@
 class Solution {
     public int buyChoco(int[] arr, int key) {
-
         int ans = Integer.MAX_VALUE;
         int fin;
         for (int i = 0; i < arr.length; i++) {
@@ -11,7 +10,6 @@ class Solution {
                 }
             }
         }
-       
         fin = key - ans;
         if(fin>=0){
         return fin;
@@ -19,5 +17,5 @@ class Solution {
         else{
             return key;
         }
+    }    
     }
-}
