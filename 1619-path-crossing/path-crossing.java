@@ -1,32 +1,36 @@
 class Solution {
     public boolean isPathCrossing(String path) {
-        Map<Character, Pair<Integer, Integer>> moves = new HashMap();
-        moves.put('N', new Pair(0, 1));
-        moves.put('S', new Pair(0, -1));
-        moves.put('W', new Pair(-1, 0));
-        moves.put('E', new Pair(1, 0));
-        
-        Set<Pair<Integer, Integer>> visited = new HashSet();
-        visited.add(new Pair(0, 0));
-        
-        int x = 0;
-        int y = 0;
-        
-        for (Character c : path.toCharArray()) {
-            Pair<Integer, Integer> curr = moves.get(c);
-            int dx = curr.getKey();
-            int dy = curr.getValue();
-            x += dx;
-            y += dy;
-            
-            Pair<Integer, Integer> pair = new Pair(x, y);
-            if (visited.contains(pair)) {
+        int x=0,y=0;
+        HashSet<Pair<Integer,Integer>> hs=new HashSet<>();
+        hs.add(new Pair<>(0,0));
+        for(int i=0;i<path.length();i++)
+        {
+            if(path.charAt(i)=='N')
+            {
+                y++;
+            }
+            else if(path.charAt(i)=='E')
+            {
+                x++;
+            }
+            else if(path.charAt(i)=='W')
+            {
+                x--;
+            }
+            else if(path.charAt(i)=='S')
+            {
+                y--;
+            }
+            System.out.println(hs);
+            if(!hs.contains(new Pair<>(x,y)))
+            {
+                hs.add(new Pair<>(x,y));
+            }
+            else
+            {
                 return true;
             }
-            
-            visited.add(pair);
         }
-        
         return false;
     }
 }
