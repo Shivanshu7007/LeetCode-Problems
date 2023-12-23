@@ -1,31 +1,28 @@
 class Solution {
     public boolean isPathCrossing(String path) {
-        int x = 0, y = 0;
-        HashSet<String> visited = new HashSet<>();
-        visited.add(constructKey(0, 0));
-        for (int i = 0; i < path.length(); i++) {
-            if (path.charAt(i) == 'N') {
+        Set<String> set = new HashSet<>();
+        int x = 0;
+        int y = 0;
+        set.add(0+","+0);
+        for(char ch : path.toCharArray()) {
+            if(ch == 'N') {
                 y++;
-            } else if (path.charAt(i) == 'S') {
+            }
+            else if(ch == 'S'){
                 y--;
-            } else if (path.charAt(i) == 'E') {
+            }
+            else if(ch == 'E') {
                 x++;
-            } else if (path.charAt(i) == 'W') {
+            }
+            else if(ch == 'W') {
                 x--;
             }
-
-            String key = constructKey(x, y);
-            System.out.println(key);
-            if (visited.contains(key)) {
+            String coordinate = x + "," + y;
+            if(set.contains(coordinate)) {
                 return true;
             }
-            visited.add(key);
+            set.add(coordinate);
         }
-
         return false;
-    }
-
-    private String constructKey(int x, int y) {
-        return x + " " + y;
     }
 }
