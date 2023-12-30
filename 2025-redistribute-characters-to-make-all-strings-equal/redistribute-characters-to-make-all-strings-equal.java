@@ -1,23 +1,16 @@
-
-import java.util.*;
-
 class Solution {
     public boolean makeEqual(String[] words) {
-        Map<Character, Integer> counts = new HashMap<>();
-        
-        for (String word : words) {
-            for (char c : word.toCharArray()) {
-                counts.put(c, counts.getOrDefault(c, 0) + 1);
-            }
-        }
-        
         int n = words.length;
-        for (Map.Entry<Character, Integer> entry : counts.entrySet()) {
-            if (entry.getValue() % n != 0) {
-                return false;
+        int[] arr = new int[26];
+        for (int i = 0; i < n ; i++) {
+            for (int j = 0; j < words[i].length() ; j++) {
+            
+                arr [words[i].charAt(j)-97] +=1;
             }
         }
-        
+        for (int i = 0; i < 26 ; i++) {
+            if (arr[i] != 0 && arr[i]%n != 0) return false;
+        }
         return true;
     }
 }
