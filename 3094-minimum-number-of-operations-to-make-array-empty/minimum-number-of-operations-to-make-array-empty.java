@@ -1,27 +1,23 @@
-import java.util.HashMap;
-import java.util.Map;
-
 class Solution {
     public int minOperations(int[] nums) {
-        Map<Integer, Integer> counts = new HashMap<>();
-        int second;
-        int result = 0;
-        for (int num : nums) {
-            counts.put(num, counts.getOrDefault(num, 0) + 1);
-        }
-        for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
-            second = entry.getValue();
-            if (second == 1) {
-                return -1;
+        Arrays.sort(nums);
+
+        int res = 0;
+        int s = 0;
+        while(s < nums.length){
+            int e = s;
+            
+            while(e < nums.length && nums[e] == nums[s]) {
+                e++;
             }
-            if (second % 3 == 1) {
-                result += (second / 3) - 1;
-                result += 2;
-            } else {
-                result += (second / 3);
-                result += ((second % 3) / 2);
-            }
+            int count = e-s;
+            if(count == 1) return -1;
+            res += count/3;
+
+            if(count%3 != 0) res++;
+            s=e;
         }
-        return result;
+        return res;
+       
     }
 }
