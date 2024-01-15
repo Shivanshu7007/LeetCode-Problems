@@ -1,23 +1,23 @@
-public class Solution {
-    int count = 0;
-    
-    public int totalNQueens(int n) {
-        dfs(0, n, 0, 0, 0);
-        return count;
+class Solution {
+  public int totalNQueens(int n) {
+    dfs(n, 0, new boolean[n], new boolean[2 * n - 1], new boolean[2 * n - 1]);
+    return ans;
+  }
+
+  private int ans = 0;
+
+  private void dfs(int n, int i, boolean[] cols, boolean[] diag1, boolean[] diag2) {
+    if (i == n) {
+      ++ans;
+      return;
     }
-    
-    private void dfs(int row, int n, int column, int diag, int antiDiag) {
-        if (row == n) {
-            ++count;
-            return;
-        }
-        for (int i = 0; i < n; ++i) {
-            boolean isColSafe = ((1 << i) & column) == 0;
-            boolean isDiagSafe = ((1 << (n - 1 + row - i)) & diag) == 0;
-            boolean isAntiDiagSafe = ((1 << (row + i)) & antiDiag) == 0;
-            if (isColSafe && isDiagSafe && isAntiDiagSafe) {
-                dfs(row + 1, n, (1 << i) | column, (1 << (n - 1 + row - i)) | diag, (1 << (row + i)) | antiDiag);
-            }
-        }
+
+    for (int j = 0; j < cols.length; ++j) {
+      if (cols[j] || diag1[i + j] || diag2[j - i + n - 1])
+        continue;
+      cols[j] = diag1[i + j] = diag2[j - i + n - 1] = true;
+      dfs(n, i + 1, cols, diag1, diag2);
+      cols[j] = diag1[i + j] = diag2[j - i + n - 1] = false;
     }
+  }
 }
