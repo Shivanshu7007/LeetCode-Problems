@@ -1,44 +1,24 @@
 class Solution {
+    static int mod =(int) 1e9 +7;
     public int sumSubarrayMins(int[] arr) {
-        int length = arr.length;
-        int[] left = new int[length];
-        int[] right = new int[length];
-      
-        Arrays.fill(left, -1);
-        Arrays.fill(right, length);
-      
-        Deque<Integer> stack = new ArrayDeque<>();
-      
-        for (int i = 0; i < length; ++i) {
-            while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
-                stack.pop();
-            }
-            if (!stack.isEmpty()) {
-                left[i] = stack.peek();
-            }
-            stack.push(i);
+        int n = arr.length + 1;
+        int[] left = new int[n];
+        int[] ext = new int[n];
+        int[] sums = new int[n];
+        for(int i = 0; i < n -1; ++i)
+           ext[i+1] = arr[i];
+           
+        int res = 0;
+        for (int i = 1; i < n; i++) {
+            int cur = ext[i];
+            int l = i - 1;
+            while (ext[l] >= cur) 
+                l = left[l];
+            
+            left[i] = l;
+            sums[i] = sums[l] + cur * (i - l);
+            res = (res + sums[i]) % mod;
         }
-      
-        stack.clear();
-      
-        for (int i = length - 1; i >= 0; --i) {
-            while (!stack.isEmpty() && arr[stack.peek()] > arr[i]) {
-                stack.pop();
-            }
-            if (!stack.isEmpty()) {
-                right[i] = stack.peek();
-            }
-            stack.push(i);
-        }
-      
-        int mod = (int) 1e9 + 7;
-        long answer = 0;
-      
-        for (int i = 0; i < length; ++i) {
-            answer += (long) (i - left[i]) * (right[i] - i) % mod * arr[i] % mod;
-            answer %= mod;
-        }
-      
-        return (int) answer;
+        return res;        
     }
 }
