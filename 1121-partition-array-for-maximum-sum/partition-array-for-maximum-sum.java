@@ -1,32 +1,49 @@
-import java.util.Arrays;
-
 class Solution {
+    int sum(int []arr,int i,int n)
+    {
+        int sum=Integer.MIN_VALUE;int j=i;
+        for(;i<=n;i++)
+        {
+            sum=Math.max(sum,arr[i]);
+        }
+        return sum*(n-j+1);
+    }
+    public int maxSum(int[] arr, int k,int n,int[]t) {
+        if(t[n]!=-1)
+        return t[n];
+    if(k>=n+1)
+    {
+        t[n]=sum(arr,0,n);
+    return t[n];
+    }
+
+    int max=Integer.MIN_VALUE;
+    int len=0;
+    int ans=Integer.MIN_VALUE;
+    for(int i=0;i<k;i++)
+    {
+        if(n<k)
+        break;
+        max=Math.max(max,arr[n-i]);
+        ans=Math.max(ans,(i+1)*max+maxSum(arr,k,n-i-1,t));
+        t[n]=ans;
+
+    }
+    return ans;
+
+   
+    }
     public int maxSumAfterPartitioning(int[] arr, int k) {
-        // Length of the input array
-        int n = arr.length;
+        int[]t=new int[arr.length];
+        for(int i=0;i<t.length;i++)
+        {
+           
+            t[i]=-1;
 
-        // Dynamic programming table to store maximum sum at each position
-        int[] dp = new int[n + 1];
-
-        // Iterate through the array elements
-        for (int i = 0; i < n; i++) {
-            int curMax = 0, curSum = 0;
-
-            // Iterate over the last k elements or until the beginning of the array
-            for (int j = i; j >= Math.max(0, i - k + 1); j--) {
-                // Update the maximum value in the current partition
-                curMax = Math.max(curMax, arr[j]);
-
-                // Calculate the current sum considering the maximum value in the partition
-                int cur = curMax * (i - j + 1) + dp[j];
-
-                // Update the current sum if the new one is greater
-                curSum = Math.max(curSum, cur);
-            }
-
-            // Update the dynamic programming table with the maximum sum at the current position
-            dp[i + 1] = curSum;
         }
 
-        return dp[n];
-    }}
+        int max=maxSum(arr,k,arr.length-1,t);
+       
+        return max;
+    }
+}
