@@ -1,41 +1,23 @@
 class Solution {
     public String minWindow(String s, String t) {
-        int m = s.length(), n = t.length();
-        HashMap<Character, Integer> mp = new HashMap<>();
+        int[] map= new int[123];
+        int left=0,right=0, count=t.length(),sub_len= Integer.MAX_VALUE,start=0;
 
-        int ans = Integer.MAX_VALUE;
-        int start = 0;
+        for(char c: t.toCharArray()) 
+            map[c]++;
 
-        for (char x : t.toCharArray())
-            mp.put(x, mp.getOrDefault(x, 0) + 1);
+        char[] ch = s.toCharArray();
+        while(right<s.length())
+        {
+            if(map[ch[right++]]-->0) count--;
 
-        int count = mp.size();
-
-        int i = 0, j = 0;
-
-        while (j < s.length()) {
-            mp.put(s.charAt(j), mp.getOrDefault(s.charAt(j), 0) - 1);
-            if (mp.get(s.charAt(j)) == 0)
-                count--;
-
-            if (count == 0) {
-                while (count == 0) {
-                    if (ans > j - i + 1) {
-                        ans = j - i + 1;
-                        start = i;
-                    }
-                    mp.put(s.charAt(i), mp.getOrDefault(s.charAt(i), 0) + 1);
-                    if (mp.get(s.charAt(i)) > 0)
-                        count++;
-
-                    i++;
-                }
+            while(count==0)
+            {
+                if((right-left)<sub_len) sub_len= right-(start=left);
+                if(map[ch[left++]]++==0) count++;
             }
-            j++;
         }
-        if (ans != Integer.MAX_VALUE)
-            return s.substring(start, start + ans);
-        else
-            return "";
+
+        return sub_len==Integer.MAX_VALUE? "": s.substring(start,start+sub_len);
     }
 }
