@@ -1,19 +1,12 @@
 class Solution {
-    public int firstUniqChar(String s) {
-        // Base case...
-        if(s.length() == 0)  return -1;
-        // To keep track of the count of each character, we initialize an int[]store with size 26...
-        int[] store = new int[26];
-        // Traverse string to keep track number of times each character in the string appears...
-        for(char ch : s.toCharArray()){
-            store[ch - 'a']++;      // To access the store[] element representative of each character, we subtract ‘a’ from that character...
-        }
-        // Traverse string again to find a character that appears exactly one time, return it’s index...
-        for(int idx = 0; idx < s.length(); idx++){
-            if(store[s.charAt(idx) - 'a'] == 1){
-                return idx;
+     public int firstUniqChar(String s) {
+        int ans = Integer.MAX_VALUE;
+        for(char c='a'; c<='z';c++){
+            int index = s.indexOf(c);
+            if(index!=-1&&index==s.lastIndexOf(c)){
+                ans = Math.min(ans,index);
             }
         }
-        return -1;      // if no character appeared exactly once...
-    }
+        return ans==Integer.MAX_VALUE?-1:ans;
+    }   
 }
