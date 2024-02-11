@@ -1,32 +1,21 @@
 class Solution {
     public int cherryPickup(int[][] grid) {
-        int ROW_NUM = grid.length, COL_NUM = grid[0].length;
-        int D[] = {-1, 0, 1};
-        int[][][] dp = new int[ROW_NUM][COL_NUM][COL_NUM];
-        
-        for (int i = 0; i < COL_NUM; i ++) // ulfill dp of the last row
-            for (int j = i; j < COL_NUM; j ++)
-                if (i == j)
-                    dp[ROW_NUM - 1][i][j] = grid[ROW_NUM - 1][i];
-                else
-                    dp[ROW_NUM - 1][i][j] = grid[ROW_NUM - 1][i] + grid[ROW_NUM - 1][j];
-        
-        for (int k = ROW_NUM - 2; k >= 0; k --) { // from the second last row to the first row
-            int row[] = grid[k];
-            for (int i = 0; i < COL_NUM; i ++)
-                // for every (i, j, k), dp[k][i][j] == dp[k][j][i]
-                // so we only need to find the answer for j >= i
-                // for (int j = 0; j < COL_NUM; j ++) { // we will get DP in the picture
-                for (int j = i; j < COL_NUM; j ++) // we will get DP' in the picture
-                    for (int di = 0; di < 3; di ++)
-                        for (int dj = 0; dj < 3; dj ++) {
-                            if (i + D[di] < 0 || i + D[di] >= COL_NUM || j + D[dj] < 0 || j + D[dj] >= COL_NUM) continue;
-                            if (i == j) 
-                                dp[k][i][j] = Math.max(dp[k][i][j], dp[k + 1][i + D[di]][j + D[dj]] + row[i]);
-                            else
-                                dp[k][i][j] = Math.max(dp[k][i][j], dp[k + 1][i + D[di]][j + D[dj]] + row[i] + row[j]);
-                        }
+    int C = grid[0].length;
+    int[][] dp = new int[C][C], old = new int[C][C];
+    for(int r = grid.length - 1; r >= 0; r--) {
+        for(int c1 = Math.min(r, C - 1); c1 >= 0; c1--) {
+            for(int c2 = Math.max(c1, C - 1 - r); c2 < C; c2++) {
+                int max = 0;
+                for(int i = c1 - 1; i <= c1 + 1; i++) {
+                    for(int j = c2 - 1; j <= c2 + 1; j++) {
+                        if(i >= 0 && i < C && j >= 0 && j < C && i <= j) max = Math.max(max, old[i][j]);
+                    }
+                }
+                dp[c1][c2] = max + grid[r][c1] + (c1 == c2 ? 0 : grid[r][c2]);
+            }
         }
-        return dp[0][0][COL_NUM - 1];
+        int[][] temp = dp; dp = old; old = temp;
     }
+    return old[0][C - 1];
+}
 }
