@@ -1,21 +1,11 @@
-
 class Solution {
 public:
-    bool check(string s){
-        int i=0,j=s.size()-1;
-        while(i<=j){
-            if(s[i]==s[j])i++,j--;
-            else return false;
-        }
-        return true;
-    }
-    string firstPalindrome(vector<string>& words) {
-        for(int i=0;i<words.size();i++){
-            if(check(words[i]))return words[i];
-        }
-        return "";
+    Solution() { ios_base::sync_with_stdio(false); cin.tie(NULL); }
+    
+    auto firstPalindrome(vector<string> words) -> string{
+      auto const& result = find_if(cbegin(words), cend(words), [](auto const &word){
+        return equal(cbegin(word), cbegin(word) + size(word) / 2, crbegin(word));
+      });
+      return result == cend(words) ? "" : *result;
     }
 };
-
-
-
