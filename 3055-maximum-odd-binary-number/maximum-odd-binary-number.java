@@ -1,24 +1,23 @@
 class Solution {
-    public String maximumOddBinaryNumber(String binaryString) {
-        int countOnes = 0;
-        StringBuilder resultBuilder = new StringBuilder();
-        
-        for (char ch : binaryString.toCharArray()) {
+    public String maximumOddBinaryNumber(String s) {
+        int count1 = 0;
+        int count0 = 0;
+        for (char ch : s.toCharArray()) {
             if (ch == '1') {
-                countOnes++;
+                count1++;
+            }
+            else {
+                count0++;
             }
         }
-        
-        for (int i = 0; i < binaryString.length() - 1; i++) {
-            if (countOnes > 1) {
-                countOnes--;
-                resultBuilder.append('1');
-            } else {
-                resultBuilder.append('0');
-            }
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < count1 - 1; i++) {
+            result.append('1');
         }
-        
-        resultBuilder.append('1');
-        return resultBuilder.toString();
+        for (int i = 0; i < count0; i++) {
+            result.append('0');
+        }
+        result.append('1');
+        return result.toString();
     }
 }
