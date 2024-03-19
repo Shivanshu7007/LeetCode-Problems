@@ -1,48 +1,25 @@
 class Solution {
-    class Task {
-        int freq, lastUsed = -1;
-        public Task(int f) { freq = f; }
-    }
-    
-    // Overall we always want to schedule the most repeated task that is available to schedule every time.
-    // This greedy approach works because picking any other task will result in non optimal solution.
-    public int leastInterval(char[] tasks, int n) {
-        // if n == 0 there will be no idle periods, so return length of tasks
-        if(n == 0) return tasks.length;
-        
-        Map<Character, Task> map = new HashMap<>();
-        for(char c: tasks) {
-            map.putIfAbsent(c, new Task(0));
-            map.get(c).freq++;
-        }
-        
-        PriorityQueue<Task> pq = new PriorityQueue<>((x, y) -> y.freq - x.freq);
-        
-        // Use a queue to add tasks that were scheduled at the end
-        // Which means tasks that are at the top of the cooling are the ones first to go out of cooling and become available for scheduling.
-        Queue<Task> cooling = new LinkedList<>();
-        
-        pq.addAll(map.values());
-        int count = 0;
-        
-        while(!pq.isEmpty() || !cooling.isEmpty()) {
-            // if no tasks are available to schedule at current time, go idle until the first cooling task becomes available
-            if(pq.isEmpty()) count = cooling.peek().lastUsed + n + 1;
-            
-            // Add any tasks in cooling that just became available for scheduling
-            while(!cooling.isEmpty() && count > cooling.peek().lastUsed + n) {
-                pq.add(cooling.poll());
+         public int leastInterval(char[] tasks, int n) {
+            if (n == 0) {
+                return tasks.length;
             }
-            
-            // Schedule the most frequent occurring task by polling priority queue.
-            Task t = pq.poll();
-            t.lastUsed = count++;
-            t.freq--;
-            
-            // Add the task back into cooling if there are more instances of it to schedule.
-            if(t.freq != 0) cooling.add(t);
+            int[] f = new int[26];
+            for (char c : tasks) {
+                f[c - 'A']++;
+            }
+            int max = 0;
+            int count = 0;
+            for (int i : f) {
+                if (i > max) {
+                    max = i;
+                    count = 1;
+                } else if (i == max) {
+                    count++;
+                }
+
+            }
+            return Math.max(tasks.length, (max - 1) * (n + 1) + count);
+            // (max-1)*n su pauze između + max sami taskovi -1 + count (ako je count 1,
+            // -1+1=0)
         }
-        
-        return count;
     }
-}
